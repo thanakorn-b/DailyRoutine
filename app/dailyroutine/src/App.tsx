@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 
 interface Memos {
@@ -9,29 +9,28 @@ interface Memos {
 
 
 function App() {
-  const [memos, setMemos] = useState<Memos[]>([
-    {
-      id: 1,
-      description: "Do something",
-    },
-    {
-      id: 5,
-      description: "Rest",
-    }
-  ]);
+  const API_HOST = 'http://localhost:8000/';
+  const [memos, setMemos] = useState<Memos[]>([]);
 
-  const addData = () => {
-    setMemos([...memos,{id: 10, description: "Write something"}])
-  }
+  useEffect(() => {
+    fetch(`${API_HOST}history/`, {
+            method: 'GET',
+          }).then(response => response.json())
+            .then(data => setMemos(data));
+  }, []);
+
+  // const addData = () => {
+  //   setMemos([...memos,{id: 10, description: "Write something"}])
+  // }
 
   const handleOnChange = (event: any, memoId: number) => { //OK
-    for(var i in memos){
-      if(memos[i].id === memoId) {
-        memos[i].description = event.target.value;
-        break;
-      };
-    }
-    setMemos(memos);  
+    // for(var i in memos){
+    //   if(memos[i].id === memoId) {
+    //     memos[i].description = event.target.value;
+    //     break;
+    //   };
+    // }
+    // setMemos(memos);  
   };
 
   return (
@@ -44,11 +43,11 @@ function App() {
         <div>
           <div>Today</div>
           {memos.map((memo, i) => 
-            <div key={i}>
+            <div>
               <input value={memo.description} onChange={e => handleOnChange(e, memo.id)}></input>
             </div>
           )}
-          <button onClick={addData}>Add</button>
+          <button onClick={() => console.log(memos)}>Add</button>
         </div>
       </body>
     </div>
