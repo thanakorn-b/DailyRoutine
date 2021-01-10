@@ -9,8 +9,12 @@ from ..serializers import HistorySerializer
 
 from ..models import History
 
-class HistoryView(APIView):
-    def get(self, request):
-        history = History.objects.all()
-        serializer = HistorySerializer(history, many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+
+class HistoryCreateView(APIView):
+    def post(self, request, *arg, **kwargs):
+        serializer = HistorySerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+        return Response(serializer.data)
