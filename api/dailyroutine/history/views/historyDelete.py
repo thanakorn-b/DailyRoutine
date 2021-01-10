@@ -9,8 +9,11 @@ from ..serializers import HistorySerializer
 
 from ..models import History
 
-class HistoryView(APIView):
-    def get(self, request):
-        history = History.objects.all()
-        serializer = HistorySerializer(history, many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+
+class HistoryDeleteView(APIView):
+    def delete(self, request, *arg, **kwargs):
+        history_id = self.kwargs.get('history_id', 0)
+        history = History.objects.get(id=history_id)
+        history.delete()
+
+        return Response('Deleted!')

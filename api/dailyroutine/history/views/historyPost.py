@@ -11,7 +11,6 @@ from ..models import History
 
 
 class HistoryPostView(APIView):
-    # http_method_names = ['post', 'head']
     def post(self, request, *arg, **kwargs):
         history_id = self.kwargs.get('history_id', 0)
         history= History.objects.get(id=history_id)

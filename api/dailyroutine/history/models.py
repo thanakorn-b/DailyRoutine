@@ -6,7 +6,7 @@ from django.utils import timezone
 # Create your models here.
 class History(models.Model):
     description = models.TextField(
-        blank=False,
+        blank=True,
         null=False
     )
     pub_date = models.DateTimeField('date published', default=timezone.now())

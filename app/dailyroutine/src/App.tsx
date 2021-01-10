@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
+
+const TopBar = styled.div`
+
+`;
 
 interface Memos {
   id: number;
@@ -18,18 +23,7 @@ function App() {
       .then(data => setMemos(data));
   }, []);
 
-  // const addData = () => {
-  //   setMemos([...memos,{id: 10, description: "Write something"}])
-  // }
-
-  const handleOnChange = (event: any, memo: any) => { //OK
-    // for(var i in memos){
-    //   if(memos[i].id === memoId) {
-    //     memos[i].description = event.target.value;
-    //     break;
-    //   };
-    // }
-    // setMemos(memos);  
+  const handleOnChangeText = (event: any, memo: any) => { //OK
     var dataChange = { 
       "description": `${event.target.value}`,
       "pub_date": `${memo.pub_date}` 
@@ -50,16 +44,51 @@ function App() {
           .then(data => setMemos(data))
       })
       .catch(error => console.log(error))
-      console.log(dataChange)
   };
 
-  const TopBar = styled.div`
+  const AddMemo = () => {
+    var dataChange = { 
+      "description": ``,
+      "pub_date": `${moment().format()}`
+      };
+    fetch(`${API_HOST}history/historyCreate/`, {
+      method: 'POST',
+      headers:{
+        'Content-type':'application/json',
+      },
+      body: JSON.stringify(dataChange)
+    })
+      .then(response => response.json())
+      .then(data => {
+        fetch(`${API_HOST}history/`, {
+          method: 'GET',
 
-  `;
+        }).then(response => response.json())
+          .then(data => setMemos(data))
+      })
+      .catch(error => console.log(error));
+  };
+
+  const deleteMemo = (memo: any) => {
+    fetch(`${API_HOST}history/historyDelete/${memo.id}/`, {
+      method: 'DELETE',
+      headers:{
+        'Content-type':'application/json',
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        fetch(`${API_HOST}history/`, {
+          method: 'GET',
+        }).then(response => response.json())
+          .then(data => setMemos(data))
+      })
+      .catch(error => console.log(error))
+  };
 
   return (
     <div >
-      <TopBar>Daily Routine</TopBar>
+      <div>Daily Routine</div>
       <body>
         <div>
           <div>date</div>
@@ -68,11 +97,14 @@ function App() {
           <div>Today</div>
           {memos.map((memo, i) =>
             <div key={i}>
-              <input value={memo.description} onChange={e => handleOnChange(e, memo)}></input>
+              <input value={memo.description} onChange={e => handleOnChangeText(e, memo)}></input>
               <div>{memo.pub_date}</div>
+              {/* <input value={memo.pub_date} onChange={e => handleOnChangeText(e, memo)}></input> */}
+              <button onClick={() => deleteMemo(memo)}>X</button>
             </div>
           )}
-          <button onClick={() => console.log(memos)}>Add</button>
+          <button onClick={AddMemo}>Add</button>
+          <button onClick={() => console.log(moment().format())}>CheckTable</button>
         </div>
       </body>
     </div>
