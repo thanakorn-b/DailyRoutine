@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import moment from 'moment'
+import moment from 'moment';
+
+const TopBar = styled.div`
+
+`;
 
 interface Memos {
   id: number;
@@ -18,10 +22,6 @@ function App() {
     }).then(response => response.json())
       .then(data => setMemos(data));
   }, []);
-
-  // const addData = () => {
-  //   setMemos([...memos,{id: 10, description: "Write something"}])
-  // }
 
   const handleOnChangeText = (event: any, memo: any) => { //OK
     var dataChange = { 
@@ -44,7 +44,6 @@ function App() {
           .then(data => setMemos(data))
       })
       .catch(error => console.log(error))
-      console.log(dataChange)
   };
 
   const AddMemo = () => {
@@ -67,17 +66,29 @@ function App() {
         }).then(response => response.json())
           .then(data => setMemos(data))
       })
+      .catch(error => console.log(error));
+  };
+
+  const deleteMemo = (memo: any) => {
+    fetch(`${API_HOST}history/historyDelete/${memo.id}/`, {
+      method: 'DELETE',
+      headers:{
+        'Content-type':'application/json',
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        fetch(`${API_HOST}history/`, {
+          method: 'GET',
+        }).then(response => response.json())
+          .then(data => setMemos(data))
+      })
       .catch(error => console.log(error))
-      console.log(dataChange)
-  }
-
-  const TopBar = styled.div`
-
-  `;
+  };
 
   return (
     <div >
-      <TopBar>Daily Routine</TopBar>
+      <div>Daily Routine</div>
       <body>
         <div>
           <div>date</div>
@@ -89,6 +100,7 @@ function App() {
               <input value={memo.description} onChange={e => handleOnChangeText(e, memo)}></input>
               <div>{memo.pub_date}</div>
               {/* <input value={memo.pub_date} onChange={e => handleOnChangeText(e, memo)}></input> */}
+              <button onClick={() => deleteMemo(memo)}>X</button>
             </div>
           )}
           <button onClick={AddMemo}>Add</button>
