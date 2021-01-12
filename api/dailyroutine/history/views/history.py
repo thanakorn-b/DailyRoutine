@@ -11,6 +11,6 @@ from ..models import History
 
 class HistoryView(APIView):
     def get(self, request):
-        history = History.objects.all()
+        history = History.objects.all().order_by('-pub_date')
         serializer = HistorySerializer(history, many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
