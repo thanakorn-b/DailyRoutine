@@ -11,14 +11,40 @@ import DateFnsUtils from '@date-io/date-fns';
 import MomentUtils from '@date-io/moment';
 
 const TopBar = styled.div`
-  background-color: lightblue;
+  background-color: grey;
   width: 100%;
+  height: 42px;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const TopBarFont = styled.div`
   font-size: 24px;
+`;
+
+const Body = styled.div`
+  padding-top: 20px;
+  background-color: lightblue;
+  width: 100%;
+  height: 95vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Button = styled.button`
+  width: 200px;
+`;
+
+const Memo = styled.div`
+  margin: 10px;
+  align-items: center;
+  display: flex;
+`;
+
+const MemoText = styled.input`
+  margin-left: 10px;
 `;
 
 interface Memos {
@@ -32,8 +58,6 @@ interface Memos {
 function App() {
   const API_HOST = 'http://localhost:8000/';
   const [memos, setMemos] = useState<Memos[]>([]);
-  const [time, setTime] = useState<Date | null>(new Date())
-
 
   useEffect(() => {
     fetch(`${API_HOST}history/`, {
@@ -106,31 +130,9 @@ function App() {
       .catch(error => console.log(error))
   };
 
-  const handleOnChangeDate = (event: any, memo: any) => {
-    var dataChange = {
-      "date": `${event.target.value}`
-    };
-    fetch(`${API_HOST}history/historyUpdate/${memo.id}/`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(dataChange)
-    })
-      .then(response => response.json())
-      .then(data => {
-        // fetch(`${API_HOST}history/`, {
-        //   method: 'GET',
-
-        // }).then(response => response.json())
-        // .then(data => setMemos(data))
-      })
-      .catch(error => console.log(error))
-  };
-
   const handleOnChangeTime = (event: any, memo: any) => {
     var dataChange = {
-      "time": `${event.target.value}`
+      "pub_date": `${event.format()}`
     };
     fetch(`${API_HOST}history/historyUpdate/${memo.id}/`, {
       method: 'POST',
@@ -150,53 +152,30 @@ function App() {
       .catch(error => console.log(error))
   }
 
-  const updateData = () => {
-    fetch(`${API_HOST}history/`, {
-      method: 'GET',
-
-    }).then(response => response.json())
-      .then(data => setMemos(data))
-  }
-
   return (
     <div >
       <TopBar>
         <TopBarFont>Daily Routine</TopBarFont>
       </TopBar>
-      <body>
+      <Body>
+        <Button onClick={AddMemo}>Add</Button>
         <div>
-          <div>History</div>
-        </div>
-        <div>
-          <MuiPickersUtilsProvider utils={MomentUtils}>
-            {/* <TimePicker
-              value="07:30"
-              onChange={setTime}
-            /> */}
-            {/* <DatePicker 
-            value={time} 
-            onChange={setTime} 
-          />*/}
-          </MuiPickersUtilsProvider>
           {memos.map((memo, i) =>
-            <div key={i}>
+            <Memo key={i}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <DateTimePicker
                   value={memo.pub_date}
-                  onChange={setTime}
+                  onChange={e => handleOnChangeTime(e, memo)}
+                  format="YYYY-MM-DD HH:MM"
                 />
               </MuiPickersUtilsProvider>
-              {/* <input value={memo.date} onChange={e => handleOnChangeDate(e, memo)}></input>
-              <input value={memo.time} onChange={e => handleOnChangeTime(e, memo)}></input> */}
-              <input value={memo.description} onChange={e => handleOnChangeText(e, memo)}></input>
-              {/* <input value={memo.pub_date} onChange={e => handleOnChangeText(e, memo)}></input> */}
+              <MemoText value={memo.description} onChange={e => handleOnChangeText(e, memo)}></MemoText>
               <button onClick={() => deleteMemo(memo)}>X</button>
-            </div>
+            </Memo>
           )}
-          <button onClick={AddMemo}>Add</button>
-          <button onClick={() => console.log(time)}>CheckTable</button>
         </div>
-      </body>
+        {/* <button onClick={() => time}>CheckTable</button> */}
+      </Body>
     </div>
   );
 }
