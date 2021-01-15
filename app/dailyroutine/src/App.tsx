@@ -11,40 +11,83 @@ import DateFnsUtils from '@date-io/date-fns';
 import MomentUtils from '@date-io/moment';
 
 const TopBar = styled.div`
-  background-color: grey;
+  background-color: #505668;
   width: 100%;
-  height: 42px;
+  height: 50px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  position: absolute;
+  /* z-index: ; */
 `;
 
 const TopBarFont = styled.div`
+  margin-top: 10px;
   font-size: 24px;
+  color: #f1ece1;
 `;
 
 const Body = styled.div`
-  padding-top: 20px;
-  background-color: lightblue;
+  background-color: whitesmoke;
+  background-image: url('https://get.pxhere.com/photo/desk-notebook-writing-table-book-pen-diary-journal-writer-paper-education-brand-document-knowledge-pen-and-paper-611823.jpg');
+  background-size: cover;
   width: 100%;
-  height: 95vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
+const Content = styled.div`
+  margin-top: 50px;
+  padding: 10px 20px;
+  background-color: #ecd596;
+  height: 100vh;
+  width: 382px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 1px 2px 8px 2px #2c2c2c;
+  overflow: scroll;
+`;
+
 const Button = styled.button`
-  width: 200px;
+  background-color: #c05805;
+  color: #f1ece1;
+  padding: 10px 40px;
+  border-color: transparent;
+  border-radius: 5px;
+  &:Hover {
+    background-color: #505668;
+  }
+  /* box-shadow: 1px 3px 8px 5px #888888; */
+`;
+
+const FontButton = styled.div`
+  font-size: 20px;
 `;
 
 const Memo = styled.div`
   margin: 10px;
   align-items: center;
   display: flex;
+  /* padding-bottom: 5px;
+  border: 1px solid;
+  border-color: transparent;
+  border-bottom-color: #303030; */
 `;
 
 const MemoText = styled.input`
-  margin-left: 10px;
+  margin: 0px 10px;
+  background-color: transparent;
+  border: 1px solid;
+  border-color: transparent;
+  border-bottom-color: #949494;
+  height: 28px;
+  &:hover {
+    border: 1px solid;
+    border-color: transparent;
+    border-bottom-color: #3a3a3a;
+  }
 `;
 
 interface Memos {
@@ -158,23 +201,28 @@ function App() {
         <TopBarFont>Daily Routine</TopBarFont>
       </TopBar>
       <Body>
-        <Button onClick={AddMemo}>Add</Button>
-        <div>
-          {memos.map((memo, i) =>
-            <Memo key={i}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <DateTimePicker
-                  value={memo.pub_date}
-                  onChange={e => handleOnChangeTime(e, memo)}
-                  format="YYYY-MM-DD HH:MM"
-                />
-              </MuiPickersUtilsProvider>
-              <MemoText value={memo.description} onChange={e => handleOnChangeText(e, memo)}></MemoText>
-              <button onClick={() => deleteMemo(memo)}>X</button>
-            </Memo>
-          )}
-        </div>
-        {/* <button onClick={() => time}>CheckTable</button> */}
+        <Content>
+          <Button onClick={AddMemo}>
+            <FontButton>Add list</FontButton>
+          </Button>
+          <div>
+            {memos.map((memo, i) =>
+              <Memo key={i}>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <DateTimePicker
+                    value={memo.pub_date}
+                    onChange={e => handleOnChangeTime(e, memo)}
+                    format="YYYY-MM-DD HH:mm"
+                  // inputVariant= "outlined"
+                  />
+                </MuiPickersUtilsProvider>
+                <MemoText value={memo.description} onChange={e => handleOnChangeText(e, memo)}></MemoText>
+                <button onClick={() => deleteMemo(memo)}>X</button>
+              </Memo>
+            )}
+          </div>
+          {/* <button onClick={() => time}>CheckTable</button> */}
+        </Content>
       </Body>
     </div>
   );
