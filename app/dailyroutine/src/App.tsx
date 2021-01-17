@@ -2,12 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import {
-  DatePicker,
-  TimePicker,
   DateTimePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
 import MomentUtils from '@date-io/moment';
 
 const TopBar = styled.div`
