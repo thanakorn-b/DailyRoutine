@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
-THIRD_PARTY = [
+THIRD_PARTY = [ 
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -66,7 +66,7 @@ ROOT_URLCONF = 'dailyroutine.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,6 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '../static/')
 
 # REST Framework
 
