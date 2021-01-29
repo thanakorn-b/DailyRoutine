@@ -96,7 +96,7 @@ interface Memos {
 };
 
 function App() {
-  const API_HOST = 'http://localhost:8000/';
+  const API_HOST = 'http://52.221.201.253/';
   const [memos, setMemos] = useState<Memos[]>([]);
 
   useEffect(() => {
